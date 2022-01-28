@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        list-style: none;
+      }
+      ul {
+        /* position: relative; */
+        /* left: 20px; */
+        position: absolute;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        left: 0;
+        top: 0;
+      }
+      ul:nth-child(2n + 1) {
+        background-color: #eee;
+      }
+      li {
+        height: 25px;
+        margin: 0 5px;
+      }
+      @keyframes animate {
+        0% {
+          /* top: 0px; */
+          transform: translateY(0);
+        }
+        100% {
+          /* 这儿根据实际情况修改 */
+          transform: translateY(-100px);
+        }
+      }
+      .animate {
+        /* animation: animate 3s linear infinite; */
+        transition: transform 1s linear;
+      }
+      section {
+        position: relative;
+        height: 125px;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <section>
+      <ul class="show1">
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+      </ul>
+      <ul class="show2">
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+      </ul>
+      <ul class="show3">
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+      </ul>
+      <ul class="show4">
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+      </ul>
+      <ul class="show5">
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+        <li>123456787890</li>
+      </ul>
+    </section>
+    <button class="move">点击我整体移动</button>
+    <button class="stop">点击停止</button>
+  </body>
+</html>
+
+<script>
+  let i = 0;
+  let flag = true;
+  let itemHeight = 0;
+  let stopFlag = true;
+  function changeNumer() {
+    i++;
+    if (i >= 5) {
+      i = 0;
+      const list = document.querySelectorAll("li");
+      list.forEach((item) => {
+        item.innerText = item.innerText.split("").reverse().join("");
+      });
+    }
+    if (flag) {
+      window.requestAnimationFrame(() => {
+        changeNumer();
+      });
+    }
+  }
+  window.onload = function () {
+    itemHeight = document.querySelector("ul").offsetHeight;
+    initList();
+
+    window.requestAnimationFrame(() => {
+      changeNumer();
+    });
+  };
+  let btn = document.querySelector("button");
+
+  let arr = [];
+  let showLength = 5;
+  function initList() {
+    const ulList = document.querySelectorAll("ul");
+    ulList.forEach((item, index) => {
+      const distance = index * itemHeight;
+      arr[index] = index * itemHeight;
+      item.style.transform = `translateY(${distance + "px"})`;
+    });
+  }
+  let j = 0;
+  // 所有的ul都移动
+  function allTranslate(length) {
+    if (!stopFlag) {
+      return;
+    }
+    // console.log("length", length);
+    // j++;
+    // if (j >= 60) {
+    //   j = 0;
+    //   for (let k = 0; k < length; k++) {
+    //     arr[k] = (arr[k] || 0) + 1;
+    //   }
+    const ulList = document.querySelectorAll("ul");
+    //   ulList.forEach((item, index) => {
+    //     const distance = arr[index] * itemHeight;
+    //     item.style.transform = `translateY(${-distance + "px"})`;
+    //     // 说明此时已经移到顶部
+    //     if (distance >= itemHeight * (length + index)) {
+    //       item.classList.remove("animate");
+    //       arr[index] = -(showLength - 1);
+    //       item.style.transform = `translateY(${
+    //         -arr[index] * itemHeight + "px"
+    //       })`;
+    //       setTimeout(() => {
+    //         item.classList.add("animate");
+    //       }, 0);
+    //     }
+    //   });
+    // }
+    // j++;
+    ulList.forEach((item, index) => {
+      // const distance = arr[index] * itemHeight;
+      // const distance = j;
+      arr[index] = arr[index] - 1;
+      item.style.transform = `translateY(${arr[index] + "px"})`;
+      // 说明此时已经移到顶部
+      if (arr[index] <= -itemHeight * (ulList.length - showLength)) {
+        // item.classList.remove("animate");
+        // arr[index] = arr[index] - 1;
+        // item.style.transform = `translateY(${
+        //   arr[index] *  + "px"
+        // })`;
+
+        // 移动到可显示区的最后一个
+        arr[index] = showLength * itemHeight;
+        // arr[index] = showLength * itemHeight;
+        console.log("这儿是狗", showLength * itemHeight);
+        item.style.transform = `translateY(${arr[index] * +"px"})`;
+        // setTimeout(() => {
+        //   item.classList.add("animate");
+        // }, 0);
+      }
+    });
+
+    requestAnimationFrame(() => {
+      allTranslate(length);
+    });
+  }
+  btn.onclick = function () {
+    flag = false;
+    const ulList = document.querySelectorAll("ul");
+    const section = document.querySelector("section");
+    const num = 1;
+    // 渲染其他的内容
+    for (let i = 0; i < num; i++) {
+      ulList.forEach((item, index) => {
+        // item.classList.add("animate");
+        section.appendChild(item.cloneNode(true));
+      });
+    }
+    initList();
+    allTranslate(document.querySelectorAll("ul").length);
+  };
+
+  const stopBtn = document.querySelector(".stop");
+  stopBtn.onclick = function () {
+    stopFlag = false;
+  };
+</script>
